@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+torch
+sqlalchemy
+pymysql
+apscheduler
+transformers
+scikit-learn
