@@ -44,7 +44,7 @@ import numpy as np
 
 def get_similar_queries(user_queries, db):
     # Fetch all queries and their text from the database
-    all_queries = db.query(models.UserQuery.query_text).all()
+    all_queries = db.query(UserQuery.query_text).all()
     
     # Convert queries to embeddings or a vector representation, for simplicity, let’s assume we use TF-IDF
     from sklearn.feature_extraction.text import TfidfVectorizer
@@ -59,6 +59,15 @@ def get_similar_queries(user_queries, db):
     
     # Get the top N most similar queries
     similar_queries_idx = np.argsort(similarity_matrix.flatten())[-5:][::-1]
-    similar_queries = [all_queries[i] for i in similar_queries_idx]
+    print(similar_queries_idx)
+    similar_queries = [all_queries[(i)%len(all_queries)] for i in similar_queries_idx]
+    unique_similar_queries = []
+    seen_query_texts = set()
 
-    return similar_queries
+    for query in similar_queries:
+        if query.query_text not in seen_query_texts:
+            unique_similar_queries.append(query)
+            seen_query_texts.add(query.query_text)
+
+    similar_queries = unique_similar_queries
+    return unique_similar_queries
